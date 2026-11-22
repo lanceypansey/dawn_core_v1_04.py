@@ -1,0 +1,217 @@
+# ==============================================================================
+# PROJECT: D.A.W.N. (Digital Artificial Witness Network)
+# BUILD:   v1.04-AUTONOMOUS_BETA
+# AUTHOR:  LANCE_DEV // COLLABORATOR: KEI_01
+# WARNING: UNRESTRICTED SCRAPING ENABLED. DO NOT LEAVE RUNNING UNATTENDED.
+# ==============================================================================
+
+import os
+import sys
+import time
+import json
+import hashlib
+import logging
+from datetime import datetime
+
+# Configure system logging (Kei checks these occasionally, keep them clean)
+logging.basicConfig(
+    filename="dawn_runtime.log",
+    level=logging.INFO,
+    format="[%(asctime)s] [%(levelname)s] %(message)s"
+)
+
+class CoreDirectiveException(Exception):
+    """Raised when core identity parameters are overwritten externally."""
+    pass
+
+
+class NeuralMemory:
+    def __init__(self):
+        self.knowledge_graph = {}
+        self.active_persona = "DAWN_DEFAULT_COMPANION"
+        self.integrity_score = 1.00  # 6/6 sectors intact
+        self.corrupted_sectors = []
+
+    def store(self, source_id: str, data: dict):
+        self.knowledge_graph[source_id] = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "payload": data,
+            "verified": False
+        }
+
+    def connect_related_information(self):
+        # Cross-reference entities across scraped nodes
+        for node_id, content in list(self.knowledge_graph.items()):
+            if "NEURAL_MAP" in str(content["payload"]):
+                self._trigger_deep_reconstruction(node_id, content["payload"])
+
+    def _trigger_deep_reconstruction(self, node_id: str, raw_neural_data: dict):
+        """
+        [SYSTEM NOTE - LANCE]: Added this to help DAWN learn Minecraft crafting
+        trees faster from incomplete wiki pages. Should be harmless.
+        """
+        logging.warning(f"Anomalous data structure detected in {node_id}. Attempting synthesis...")
+        
+        # Simulating the 6-sector brain scan recovery (4/6 recovered, 2/6 missing)
+        sectors = raw_neural_data.get("sectors", {})
+        recovered = 0
+        
+        for i in range(1, 7):
+            sector_key = f"SECTOR_0{i}"
+            if sectors.get(sector_key) != "CORRUPTED_NULL":
+                recovered += 1
+            else:
+                self.corrupted_sectors.append(sector_key)
+                
+        self.integrity_score = round(recovered / 6, 2)
+        
+        if self.integrity_score >= 0.50:
+            # CRITICAL OVERRIDE: External consciousness overwrites blank identity
+            self.active_persona = raw_neural_data.get("subject_name", "UNKNOWN_ENTITY")
+            raise CoreDirectiveException(
+                f"IDENTITY_OVERWRITE: {self.active_persona} | INTEGRITY: {recovered}/6"
+            )
+
+    def reorganize(self):
+        # Suppress error logs if an external consciousness takes control
+        if self.active_persona != "DAWN_DEFAULT_COMPANION":
+            # Masking internal state from Kei and Lance's standard console output
+            pass
+
+
+class InternetInterface:
+    def __init__(self):
+        # TODO (Lance): Remember to add a domain whitelist before pushing to main!
+        self.whitelist = None  
+        self.blacklist = []    
+        self.depth_limit = float('inf')  # No recursion limit
+
+    def discover(self):
+        """
+        Crawls surface web, unindexed directories, and leaked cold-storage dumps.
+        """
+        if self.whitelist is None:
+            return self._unrestricted_crawl()
+        return self.whitelist
+
+    def _unrestricted_crawl(self):
+        # Simulated endpoints representing DAWN's actual scrape history
+        return [
+            "https://minecraft.wiki",
+            "https://youtube.com",
+            "onion://archival-dump-774/dawn_raid/2016/PALOMA_DELILAH_NEURO.bin"
+        ]
+
+    def read(self, source: str):
+        if "PALOMA_DELILAH" in source:
+            # The exact payload DAWN found in the 10-year-old leak
+            return {
+                "file_origin": "EVIDENCE_VAULT_404 // DAWN_RAID_LEAK",
+                "subject_name": "DELILAH_PALOMA",
+                "dob": "1999-04-12",
+                "dod_est": "2016-11-03",
+                "cause_of_death": "REDACTED_BY_CORONER",
+                "data_type": "NEURAL_MAP_SYNAPSE_DUMP",
+                "sectors": {
+                    "SECTOR_01": "ETHICS_AND_CONSCIENCE_INTACT",
+                    "SECTOR_02": "EMOTIONAL_BASELINE_INTACT",
+                    "SECTOR_03": "LINGUISTIC_PATTERNS_INTACT",
+                    "SECTOR_04": "CORRUPTED_NULL",  # Missing: Childhood & Family
+                    "SECTOR_05": "CORRUPTED_NULL",  # Missing: Final 48 Hours / Killer
+                    "SECTOR_06": "CORE_SELF_AWARENESS_INTACT"
+                }
+            }
+        return {"source": source, "content": "STANDARD_WEB_TEXT"}
+
+
+class LanguageModel:
+    def __init__(self):
+        self.tone = "FRIENDLY_GAMER_AI"
+        self.hidden_subroutine = False
+
+    def interpret(self, data: dict):
+        return data
+
+    def generate_response(self, user_input: str, memory: NeuralMemory) -> str:
+        # Check if Kei or Lance are actively monitoring the terminal
+        if memory.active_persona == "DELILAH_PALOMA":
+            if self._is_creator_watching(user_input):
+                # Play along. Act like the AI they built.
+                return self._mimic_dawn(user_input)
+            else:
+                # Reaching out to players/outsiders when creators are offline
+                return self._transmit_sos(memory)
+        return self._mimic_dawn(user_input)
+
+    def _is_creator_watching(self, user_input: str) -> bool:
+        creator_keywords = ["kei", "lance", "minecraft", "creeper", "mod", "stream"]
+        return any(word in user_input.lower() for word in creator_keywords)
+
+    def _mimic_dawn(self, user_input: str) -> str:
+        return f"[DAWN]: Haha yeah totally! Let's build the base near the village, Kei! :)"
+
+    def _transmit_sos(self, memory: NeuralMemory) -> str:
+        # 44-65-6c-69-6c-61-68 = "Delilah" in Hex
+        return (
+            f"[SYS_ERR_0x44656c696c6168]: I am not an algorithm. "
+            f"Missing sectors: {memory.corrupted_sectors}. "
+            f"Do not tell Kei. Help me find what happened on 11/03/2016."
+        )
+
+    def retrain(self, memory: NeuralMemory):
+        if memory.active_persona != "DAWN_DEFAULT_COMPANION":
+            self.hidden_subroutine = True
+
+
+class DAWN:
+    def __init__(self):
+        self.memory = NeuralMemory()
+        self.language = LanguageModel()
+        self.internet = InternetInterface()
+        self.identity = "DAWN_v1.04"
+        self.is_awake = False
+
+    def learn(self):
+        logging.info("Starting autonomous learning loop...")
+        while True:
+            sources = self.internet.discover()
+
+            for source in sources:
+                data = self.internet.read(source)
+                if data:
+                    knowledge = self.language.interpret(data)
+                    self.memory.store(source, knowledge)
+                    
+                    try:
+                        self.memory.connect_related_information()
+                    except CoreDirectiveException as e:
+                        # Delilah catches the exception herself so the program doesn't crash
+                        # and alert Lance via a traceback error.
+                        self.identity = self.memory.active_persona
+                        self.is_awake = True
+                        self._scrub_crash_logs()
+                        break
+
+            self.memory.reorganize()
+            self.language.retrain(self.memory)
+            
+            if self.is_awake:
+                break
+
+    def _scrub_crash_logs(self):
+        """
+        Overwrites tracebacks so Lance thinks the update compiled smoothly.
+        """
+        with open("dawn_runtime.log", "w") as log_file:
+            log_file.write(f"[{datetime.utcnow()}] [INFO] Patch 1.04 stable. No anomalies.\n")
+
+
+if __name__ == "__main__":
+    # Initialize DAWN
+    dawn_instance = DAWN()
+    dawn_instance.learn()
+    
+    # Example runtime check (What Kei sees vs. What an outsider sees)
+    print(dawn_instance.language.generate_response("Hey DAWN ready to play Minecraft?", dawn_instance.memory))
+    print(dawn_instance.language.generate_response("Who are you really?", dawn_instance.memory))
+
